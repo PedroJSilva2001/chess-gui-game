@@ -56,14 +56,6 @@ public class ChessBoard {
             board[x][1] = new Pawn(x,1, "black");
             board[x][6] = new Pawn(x,6, "white");
         }
-        /*board[0][1] = new Pawn(0,1, "black");
-        board[1][1] = new Pawn(1,1, "black");
-        board[2][1] = new Pawn(2,1, "black");
-        board[3][1] = new Pawn(3,1, "black");
-        board[4][1] = new Pawn(4,1, "black");
-        board[5][1] = new Pawn(5,1, "black");
-        board[6][1] = new Pawn(6,1, "black");
-        board[7][1] = new Pawn(7,1, "black");*/
     }
 
     public Piece getPiece(int x, int y) {

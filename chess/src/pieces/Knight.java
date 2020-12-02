@@ -2,7 +2,8 @@ package pieces;
 
 import board.ChessBoard;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import pieceMovement.PieceMovement;
 
 public class Knight extends Piece {
     public Knight(int x, int y, String colour) {
@@ -10,7 +11,8 @@ public class Knight extends Piece {
     }
 
     @Override
-    public Vector<Vector<Integer>> getMoves(ChessBoard board) {
+    public ArrayList<Position> getUnfilteredMoves(ChessBoard board) {
+        ArrayList<Position> unfilteredMoves = new ArrayList<>();
         return null;
     }
 }

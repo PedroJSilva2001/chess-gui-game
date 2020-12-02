@@ -3,10 +3,13 @@ package pieces;
 import board.ChessBoard;
 import pieceBehaviour.PieceBehaviour;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
-public class Pawn extends Piece implements PieceBehaviour {
+public class Pawn extends Piece {
+
     private boolean hasntMoved;
+
     public Pawn(int x, int y, String colour) {
         super(x,y,colour, "pawn");
         hasntMoved = true;
@@ -23,11 +26,15 @@ public class Pawn extends Piece implements PieceBehaviour {
     }
 
     @Override
-    public Vector<Vector<Integer>> getMoves(ChessBoard board) {
+    public ArrayList<Position> getUnfilteredMoves(ChessBoard board) {
+        int step = hasntMoved? 2:1;
+        int dir = colour.equals("black")? 1:-1;
+        ArrayList<Position> unfilteredMoves = new ArrayList<>();
 
-        Vector<Vector<Integer>> possibleMoves = new Vector<Vector<Integer>>();
-        Vector<Integer> move = getShortLine(x,y,)
+        return unfilteredMoves;
+    }
 
-        return possibleMoves;
+    public void setState(boolean state) {
+        hasntMoved = state;
     }
 }

@@ -20,7 +20,7 @@ public class Main {
             System.out.println(v.elementAt(i).getX());
             System.out.println(v.elementAt(i).getY());
         }
-
+        //Piece piece = new Piece();
     }
 
     public static void change(Bishop bishop) {
