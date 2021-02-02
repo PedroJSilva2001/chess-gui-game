@@ -40,6 +40,7 @@ public class Pawn extends Piece {
 
         public void setState(boolean state) {
                 hasntMoved = state;
+                hasntMoved = state;
         }
 
         private ArrayList<Move> enPassant(ChessBoard board) {
