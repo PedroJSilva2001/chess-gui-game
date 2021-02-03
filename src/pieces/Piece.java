@@ -1,5 +1,6 @@
 package pieces;
 import board.ChessBoard;
+import moveHistory.Move;
 import pieceBehaviour.PieceBehaviour;
 import java.util.ArrayList;
 
@@ -99,6 +100,10 @@ public abstract class Piece implements PieceBehaviour {
         public boolean isBlack() {
                 return colour.equals("black");
         }
+
+        public abstract ArrayList<Move> getValidMoves(ChessBoard board);
+
+        protected abstract ArrayList<Move> filterMoves(ChessBoard board);
 
 
 }

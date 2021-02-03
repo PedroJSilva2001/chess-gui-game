@@ -4,7 +4,7 @@ import java.util.*;
 import board.ChessBoard;
 import pieceMovement.PieceMovement;
 
-public class Bishop extends Piece   {
+public class Bishop extends Piece {
 
         public Bishop(int x, int y, String colour) {
                 super(x, y, colour);

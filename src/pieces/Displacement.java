@@ -10,11 +10,11 @@ public class Displacement {
                 this.endPosition = end;
         }
 
-        Position getStart() {
+        public Position getStart() {
                 return startPosition;
         }
 
-        Position getEnd() {
+        public Position getEnd() {
                 return endPosition;
         }
 }

@@ -9,13 +9,13 @@ import moveHistory.MoveType;
 
 public class Pawn extends Piece {
 
-        private boolean hasntMoved;
+        private boolean hasMoved;
 
         private boolean passing;
 
         public Pawn(int x, int y, String colour) {
                 super(x, y, colour);
-                hasntMoved = true;
+                hasMoved = false;
                 passing = false;
         }
 
@@ -31,34 +31,45 @@ public class Pawn extends Piece {
 
         @Override
         public ArrayList<Position> getUnfilteredMoves(ChessBoard board) {
-                int step = hasntMoved? 2:1;
+                int step = !hasMoved? 2:1;
                 int dir = colour.equals("black")? 1:-1;
                 ArrayList<Position> unfilteredMoves = new ArrayList<>();
 
+                if (canCapture(x, isBlack()? y+1 : y-1, board) == -1)
+                        unfilteredMoves.add(new Position(x, isBlack()? y+1 : y-1));
+
+                if (!hasMoved && canCapture(x, isBlack()? y+2 : y-2, board) == -1)
+                        unfilteredMoves.add(new Position(x, isBlack()? y+2 : y-2));
+
+                hasMoved = true;
                 return unfilteredMoves;
         }
 
         public void setState(boolean state) {
-                hasntMoved = state;
-                hasntMoved = state;
+                hasMoved = state;
         }
 
-        private ArrayList<Move> enPassant(ChessBoard board) {
-                ArrayList<Move> moves = new ArrayList<>();
+        private Move getEnPassant(ChessBoard board) {
+                int newX = -1;
+
+                if (captureEnPassant(true, board)) newX = x-1;
+
+                else if (captureEnPassant(false, board)) newX = x+1;
+
+                if (newX == -1) return null;
+
                 Position startPosition = new Position(x, y);
-                Position endPositionLeft = new Position(x-1, isBlack()? y-1 : y+1);
-                Position endPositionRight = new Position(x+1, isBlack()? y-1 : y+1);
-                Position pawnPositionLeft = new Position(x-1, y);
-                Position pawnPositionRight = new Position(x+1, y);
+                Position endPosition = new Position(newX, isBlack()? y+1 : y-1);
+                Position capturedStartPosition = new Position(newX, isBlack()? y-2 : y+2);
+                Position capturedEndPosition = new Position(newX, y);
+                Displacement path = new Displacement(startPosition,endPosition);
+                Displacement capturedPath = new Displacement(capturedStartPosition, capturedEndPosition);
+                Piece captured = board.getPiece(capturedEndPosition);
 
-                if (captureEnPassant(true, board))
-                        moves.add(new EnPassant(startPosition, endPositionLeft,
-                                this, board.getPiece(pawnPositionLeft)));
-                if (captureEnPassant(false, board))
-                        moves.add(new EnPassant(startPosition, endPositionRight,
-                                this, board.getPiece(pawnPositionRight)));
-                return moves;
+                return new EnPassant(path, capturedPath, this, captured);
+
         }
+
 
         private boolean inFifthRank() {
                 return (colour.equals("white") && y == 3) ||
@@ -86,5 +97,31 @@ public class Pawn extends Piece {
         public void setPassingState(boolean passing) {
                 this.passing = passing;
         }
+
+        @Override
+        public ArrayList<Move> getValidMoves(ChessBoard board) {
+                ArrayList<Move> validMoves = new ArrayList<>();
+//nao esquecer do rei: se anda para a frente e podera ficar em check
+                Move enPassant = getEnPassant(board);
+                if (enPassant != null) validMoves.add(enPassant);
+
+
+                return validMoves;
+        }
+
+        @Override
+        protected ArrayList<Move> filterMoves(ChessBoard board) {
+                ArrayList<Move> filteredMoves = new ArrayList<>();
+        }
+
+        private Move getPromotion() {
+
+                return new Promotion();
+        }
+
+        private boolean canPromote() {
+                return 
+        }
+
 
 }

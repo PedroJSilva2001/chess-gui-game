@@ -1,24 +1,29 @@
 package moveHistory;
 
 import board.ChessBoard;
+import pieces.Displacement;
 import pieces.Piece;
 import pieces.Position;
 
-public class EnPassant extends Standard {
+public class EnPassant extends Capture {
 
-        private final Piece capturedPiece;
+        private final Displacement capturedPath;
         /**
          * Constructor of the move
          *
-         * @param startPosition
-         * @param endPosition
+         * @param path
+         * @param capturedPath
          * @param moved
+         * @param captured
          */
-        public EnPassant(Position startPosition, Position endPosition, Piece moved, Piece captured) {
+       /* public EnPassant(Position startPosition, Position endPosition, Piece moved, Piece captured) {
                 super(startPosition, endPosition, moved);
                 this.capturedPiece = captured;
+        }*/
+        public EnPassant(Displacement path, Displacement capturedPath, Piece moved, Piece captured) {
+                super(path, moved, captured);
+                this.capturedPath = capturedPath;
         }
-
         //private void removeCapturedPawn
         @Override
         public void undo(ChessBoard board) {
@@ -32,6 +37,10 @@ public class EnPassant extends Standard {
                 pos.setX(xprev);
                 board.removePiece(pos);
                 super.undo(board);*/
+                board.setPiece(capturedPath.getStart(), capturedPiece);
+                board.removePiece(capturedPath.getEnd());
+                board.setPiece(path.getStart(), movedPiece);
+                board.removePiece(path.getEnd());
         }
 
         @Override
@@ -47,5 +56,9 @@ public class EnPassant extends Standard {
                 board.removePiece(pos);
                 super.redo(board);*/
 
+                board.setPiece(capturedPath.getEnd(), capturedPiece);
+                board.removePiece(capturedPath.getStart());
+                board.setPiece(path.getEnd(), movedPiece);
+                board.removePiece(path.getStart());
         }
 }
