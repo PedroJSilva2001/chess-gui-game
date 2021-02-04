@@ -5,7 +5,7 @@ import pieces.Displacement;
 import pieces.Piece;
 
 public class Promotion extends Standard{
-        private Piece promoted;
+        private final Piece promoted;
         /**
          * Constructor of the move
          *

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import moveHistory.EnPassant;
 import moveHistory.Move;
 import moveHistory.MoveType;
+import moveHistory.Promotion;
 
 public class Pawn extends Piece {
 
@@ -49,12 +50,12 @@ public class Pawn extends Piece {
                 hasMoved = state;
         }
 
-        private Move getEnPassant(ChessBoard board) {
+        /*private Move getEnPassant(ChessBoard board) {
                 int newX = -1;
 
-                if (captureEnPassant(true, board)) newX = x-1;
+                if (canCaptureEnPassant(true, board)) newX = x-1;
 
-                else if (captureEnPassant(false, board)) newX = x+1;
+                else if (canCaptureEnPassant(false, board)) newX = x+1;
 
                 if (newX == -1) return null;
 
@@ -68,6 +69,17 @@ public class Pawn extends Piece {
 
                 return new EnPassant(path, capturedPath, this, captured);
 
+        }*/
+        private Move getEnPassant(boolean left, ChessBoard board) {
+                int newX = left? x-1: x+1;
+                Position startPosition = new Position(x, y);
+                Position endPosition = new Position(newX, isBlack()? y+1 : y-1);
+                Position capturedStartPosition = new Position(newX, isBlack()? y-2 : y+2);
+                Position capturedEndPosition = new Position(newX, y);
+                Displacement path = new Displacement(startPosition,endPosition);
+                Displacement capturedPath = new Displacement(capturedStartPosition, capturedEndPosition);
+                Piece captured = board.getPiece(capturedEndPosition);
+                return new EnPassant(path, capturedPath, this, captured);
         }
 
 
@@ -76,7 +88,7 @@ public class Pawn extends Piece {
                         (colour.equals("black") && y == 4);
         }
 
-        private boolean captureEnPassant(boolean left, ChessBoard board) {
+        private boolean canCaptureEnPassant(boolean left, ChessBoard board) {
                 if (!inFifthRank()) return false;
 
                 int newX = left ? x-1: x+1;
@@ -102,9 +114,13 @@ public class Pawn extends Piece {
         public ArrayList<Move> getValidMoves(ChessBoard board) {
                 ArrayList<Move> validMoves = new ArrayList<>();
 //nao esquecer do rei: se anda para a frente e podera ficar em check
-                Move enPassant = getEnPassant(board);
-                if (enPassant != null) validMoves.add(enPassant);
+                //Move enPassant = getEnPassant(board);
+                //if (enPassant != null) validMoves.add(enPassant);
+                if (canCaptureEnPassant(true, board))
+                        validMoves.add(getEnPassant(true, board));
 
+                else if (canCaptureEnPassant(false, board))
+                        validMoves.add(getEnPassant(false, board));
 
                 return validMoves;
         }
@@ -112,15 +128,21 @@ public class Pawn extends Piece {
         @Override
         protected ArrayList<Move> filterMoves(ChessBoard board) {
                 ArrayList<Move> filteredMoves = new ArrayList<>();
+                return filteredMoves;
         }
 
-        private Move getPromotion() {
-
-                return new Promotion();
+        private Move getPromotion(ChessBoard board) {
+                Position startPosition = new Position(x, y);
+                Position endPosition = new Position(x, isBlack()? 7 : 0);
+                Displacement path = new Displacement(startPosition, endPosition);
+                Piece promoted = promote("queen");
+                if (canPromote(board)) return new Promotion(path, this, promoted);
+                return null;
         }
 
-        private boolean canPromote() {
-                return 
+        private boolean canPromote(ChessBoard board) {
+                return (colour.equals("white") && y == 1 && canCapture(x,0, board) == -1)
+                        || (colour.equals("black") && y == 6 && canCapture(x, 7, board) == -1) ;
         }
 
 
